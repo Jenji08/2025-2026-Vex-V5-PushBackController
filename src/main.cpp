@@ -43,7 +43,9 @@ motor rightMotorA = motor(PORT6, ratio18_1, true);
 motor rightMotorB = motor(PORT8, ratio18_1, true);
 motor_group RightDriveSmart = motor_group(rightMotorA, rightMotorB);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
-controller Controller1 = controller(primary);
+controller ControllerDtrain = controller(primary);
+controller ControllerMech = controller(partner);
+//mech is slave
 motor motors[4] = {leftMotorA, leftMotorB, rightMotorA, rightMotorB};
 
 // generating and setting random seed
@@ -167,9 +169,9 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
-    axis3Pos = Controller1.Axis3.position();
-    axis1Pos = Controller1.Axis1.position();
-    axis4Pos = Controller1.Axis4.position();
+    axis3Pos = ControllerDtrain.Axis3.position();
+    axis1Pos = ControllerDtrain.Axis1.position();
+    axis4Pos = ControllerDtrain.Axis4.position();
     //get controller inputs
 
     if(axis3Pos == 0 && axis1Pos == 0 && axis4Pos == 0)
@@ -222,10 +224,11 @@ void usercontrol(void) {
         Drive(axis4Pos,(int[4]){1,0,0,1});
       }
 
-    wait(20, msec); // Sleep the task for a short amount of time to
-                    // prevent wasted resources.
+    
   }
-}
+  wait(20, msec); // Sleep the task for a short amount of time to
+                    // prevent wasted resources.
+} 
 }
 
 //
