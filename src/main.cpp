@@ -41,12 +41,17 @@ motor leftMotorB = motor(PORT7, ratio18_1, false);
 motor_group LeftDriveSmart = motor_group(leftMotorA, leftMotorB);
 motor rightMotorA = motor(PORT6, ratio18_1, true);
 motor rightMotorB = motor(PORT8, ratio18_1, true);
+motor cluster1 = motor(PORT9, ratio18_1, false);
+motor cluster2 = motor(PORT10, ratio18_1, false);
+motor cluster3 = motor(PORT11, ratio18_1, false);
 motor_group RightDriveSmart = motor_group(rightMotorA, rightMotorB);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
 controller ControllerDtrain = controller(primary);
 controller ControllerMech = controller(partner);
 //mech is slave
-motor motors[4] = {leftMotorA, leftMotorB, rightMotorA, rightMotorB};
+
+motor dtrainMotors[4] = {leftMotorA, leftMotorB, rightMotorA, rightMotorB};
+//master motor group
 
 // generating and setting random seed
 void initializeRandomSeed(){
@@ -93,21 +98,26 @@ int axis3Pos;
 int axis1Pos;
 int axis4Pos;
 
+void option1()
+{
+//X was pressed
+}
+
 void Drive(int speed, int dir[4])
 {
   int fixedSpeed = abs(speed);
   for(int i = 0; i < 4; i++)
   {
-    motors[i].setVelocity(fixedSpeed,percent);
+    dtrainMotors[i].setVelocity(fixedSpeed,percent);
 
     switch(dir[i])
     {
       case 0:
-      motors[i].spin(forward);
+      dtrainMotors[i].spin(forward);
       break;
 
       case 1:
-      motors[i].spin(reverse);
+      dtrainMotors[i].spin(reverse);
       break;
 
       default:
@@ -226,6 +236,11 @@ void usercontrol(void) {
 
     
   }
+
+  ControllerDtrain.ButtonX.pressed(option1);
+  ControllerDtrain.ButtonA.pressed(option2);
+  ControllerDtrain.ButtonB.pressed(option3);
+
   wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
 } 
@@ -243,6 +258,7 @@ int main() {
   // Run the pre-autonomous function.
   pre_auton();
 
+  
 
 
   }
