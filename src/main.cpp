@@ -77,10 +77,10 @@ void vexcodeInit() {
 
 // Helper to make playing sounds from the V5 in VEXcode easier and
 // keeps the code cleaner by making it clear what is happening.
-void playVexcodeSound(const char *soundName) {
-  std::cout << "VEXPlaySound" << soundName;
-  wait(5, msec);
-}
+// void playVexcodeSound(const char *soundName) {
+//   std::cout << "VEXPlaySound" << soundName;
+//   wait(5, msec);
+// }
 
 
 
@@ -101,6 +101,72 @@ int axis4Pos;
 void option1()
 {
 //X was pressed
+  cluster1.spin(forward);
+  cluster2.spin(forward);
+  cluster3.spin(forward);
+}
+
+void option2()
+{
+  //A was pressed
+  cluster1.spin(reverse);
+  cluster2.spin(forward);
+  cluster3.spin(forward);
+}
+
+void option3()
+{
+  //B was pressed
+  cluster1.spin(forward);
+  cluster2.spin(reverse);
+  cluster3.spin(forward);
+}
+
+void option4()
+{
+  //Y was pressed
+  cluster1.spin(forward);
+  cluster2.spin(forward);
+  cluster3.spin(reverse);
+}
+
+void option5()
+{
+  //Up was pressed
+  cluster1.spin(reverse);
+  cluster2.spin(forward);
+  cluster3.spin(reverse);
+}
+
+void option6()
+{
+  //right was pressed
+  cluster1.spin(forward);
+  cluster2.spin(reverse);
+  cluster3.spin(reverse);
+}
+
+void option7()
+{
+  //down was pressed
+  cluster1.spin(reverse);
+  cluster2.spin(reverse);
+  cluster3.spin(forward);
+}
+
+void option8()
+{
+  //left was pressed
+  cluster1.spin(reverse);
+  cluster2.spin(reverse);
+  cluster3.spin(reverse);
+}
+
+void r1WasPressed()
+{
+  cluster1.stop();
+  cluster2.stop();
+  cluster3.stop();
 }
 
 void Drive(int speed, int dir[4])
@@ -146,8 +212,16 @@ void pre_auton(void) {
   leftMotorB.setMaxTorque(100,percent);
   rightMotorA.setMaxTorque(100,percent);
   rightMotorB.setMaxTorque(100,percent);
+
+  cluster1.setMaxTorque(100,percent);
+  cluster2.setMaxTorque(100,percent);
+  cluster3.setMaxTorque(100,percent);
+
+  cluster1.setVelocity(100,percent);
+  cluster2.setVelocity(100,percent);
+  cluster3.setVelocity(100,percent);
   
-  return void;
+  //return void;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -240,6 +314,14 @@ void usercontrol(void) {
   ControllerDtrain.ButtonX.pressed(option1);
   ControllerDtrain.ButtonA.pressed(option2);
   ControllerDtrain.ButtonB.pressed(option3);
+  ControllerDtrain.ButtonY.pressed(option4);
+
+  ControllerDtrain.ButtonUp.pressed(option5);
+  ControllerDtrain.ButtonRight.pressed(option6);
+  ControllerDtrain.ButtonDown.pressed(option7);
+  ControllerDtrain.ButtonLeft.pressed(option8);
+
+  ControllerDtrain.ButtonR1.pressed(r1WasPressed);
 
   wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
