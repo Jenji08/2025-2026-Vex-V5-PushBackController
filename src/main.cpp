@@ -41,9 +41,9 @@ motor leftMotorB = motor(PORT7, ratio18_1, false);
 motor_group LeftDriveSmart = motor_group(leftMotorA, leftMotorB);
 motor rightMotorA = motor(PORT6, ratio18_1, true);
 motor rightMotorB = motor(PORT8, ratio18_1, true);
-motor cluster1 = motor(PORT9, ratio18_1, false);
-motor cluster2 = motor(PORT10, ratio18_1, false);
-motor cluster3 = motor(PORT11, ratio18_1, false);
+motor cluster1 = motor(PORT11, ratio18_1, false);
+motor cluster2 = motor(PORT12, ratio18_1, false);
+motor cluster3 = motor(PORT13, ratio18_1, false);
 motor_group RightDriveSmart = motor_group(rightMotorA, rightMotorB);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
 controller ControllerDtrain = controller(primary);
@@ -311,17 +311,17 @@ void usercontrol(void) {
     
   }
 
-  ControllerDtrain.ButtonX.pressed(option1);
-  ControllerDtrain.ButtonA.pressed(option2);
-  ControllerDtrain.ButtonB.pressed(option3);
-  ControllerDtrain.ButtonY.pressed(option4);
+  ControllerMech.ButtonX.pressed(option1);
+  ControllerMech.ButtonA.pressed(option2);
+  ControllerMech.ButtonB.pressed(option3);
+  ControllerMech.ButtonY.pressed(option4);
 
-  ControllerDtrain.ButtonUp.pressed(option5);
-  ControllerDtrain.ButtonRight.pressed(option6);
-  ControllerDtrain.ButtonDown.pressed(option7);
-  ControllerDtrain.ButtonLeft.pressed(option8);
+  ControllerMech.ButtonUp.pressed(option5);
+  ControllerMech.ButtonRight.pressed(option6);
+  ControllerMech.ButtonDown.pressed(option7);
+  ControllerMech.ButtonLeft.pressed(option8);
 
-  ControllerDtrain.ButtonR1.pressed(r1WasPressed);
+  ControllerMech.ButtonR1.pressed(r1WasPressed);
 
   wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
