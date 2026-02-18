@@ -37,7 +37,7 @@ brain Brain;
 
 // Robot configuration code.
 motor leftMotorA = motor(PORT5, ratio18_1, false);
-motor leftMotorB = motor(PORT7, ratio18_1, false);
+motor leftMotorB = motor(PORT3, ratio18_1, false);
 motor_group LeftDriveSmart = motor_group(leftMotorA, leftMotorB);
 motor rightMotorA = motor(PORT6, ratio18_1, true);
 motor rightMotorB = motor(PORT8, ratio18_1, true);
@@ -238,6 +238,7 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
+  
 }
 //meowffd
 /*---------------------------------------------------------------------------*/
@@ -287,25 +288,25 @@ void usercontrol(void) {
 
       if(axis1Pos > 0)
       {
-      Drive(axis1Pos, (int[4]){0,0,1,1});
+      Drive(axis1Pos, (int[4]){1,1,0,0});
       }
       //right turn
 
       if(axis1Pos < 0)
       {
-        Drive(axis1Pos, (int[4]){1,1,0,0});
+        Drive(axis1Pos, (int[4]){0,0,1,1});
       }
       //left turn
 
       if(axis4Pos > 0)
       {
-        Drive(axis4Pos, (int[4]){0,1,1,0});
+        Drive(axis4Pos, (int[4]){1,0,0,1});
       }
       //strafe right
 
       if(axis4Pos < 0)
       {
-        Drive(axis4Pos,(int[4]){1,0,0,1});
+        Drive(axis4Pos,(int[4]){0,1,1,0});
       }
 
     
