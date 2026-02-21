@@ -36,16 +36,16 @@ brain Brain;
 
 
 // Robot configuration code.
+//gps GPS = gps(PORT19, offsetx, offsety, mm, 180);
+digital_out trapdoorSolenoid = digital_out(Brain.ThreeWirePort.H);
+digital_out secondTest = digital_out(Brain.ThreeWirePort.G);
 motor leftMotorA = motor(PORT5, ratio18_1, false);
 motor leftMotorB = motor(PORT3, ratio18_1, false);
-motor_group LeftDriveSmart = motor_group(leftMotorA, leftMotorB);
 motor rightMotorA = motor(PORT6, ratio18_1, true);
 motor rightMotorB = motor(PORT8, ratio18_1, true);
 motor cluster1 = motor(PORT11, ratio18_1, false);
 motor cluster2 = motor(PORT12, ratio18_1, false);
 motor cluster3 = motor(PORT13, ratio18_1, false);
-motor_group RightDriveSmart = motor_group(rightMotorA, rightMotorB);
-drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
 controller ControllerDtrain = controller(primary);
 controller ControllerMech = controller(partner);
 //mech is slave
@@ -98,6 +98,27 @@ int axis3Pos;
 int axis1Pos;
 int axis4Pos;
 
+int autonVer = 0;
+
+bool solenoidBool = false;
+bool testBool = false;
+
+// void driveTo(double targetX, double targetY)
+// {
+//   double displacement;
+//   int variance = 20; //arbitrary value, code will stop once bot is within this many units 
+//   while(displacement > variance)
+//   {
+//     double dx = targetX - GPS.xPosition(mm);
+//     double dy = targetY - GPS.yPosition(mm);
+
+//     displacement = sqrt((dx*dx) + (dy*dy));
+
+    
+   
+    
+//   }
+// }
 void option1()
 {
 //X was pressed
@@ -160,13 +181,41 @@ void option8()
   cluster1.spin(reverse);
   cluster2.spin(reverse);
   cluster3.spin(reverse);
+  printf("test");
 }
 
 void r1WasPressed()
 {
+  secondTest.set(true);
+
   cluster1.stop();
   cluster2.stop();
   cluster3.stop();
+}
+
+// void solenoidToggle()
+// {
+//     trapdoorSolenoid.set(!solenoidBool);
+//     solenoidBool = !solenoidBool;
+//     //simple toggle thing for solenoid on trapdoor.
+//     printf("toggle");
+  
+// }
+
+void L1WasPressed()
+{
+trapdoorSolenoid.set(true);
+}
+void L2WasPressed()
+{
+  // secondTest.set(!testBool);
+  // testBool = !testBool;
+
+  trapdoorSolenoid.set(false);
+}
+void R2WasPressed()
+{
+  secondTest.set(false);
 }
 
 void Drive(int speed, int dir[4])
@@ -208,6 +257,8 @@ void Drive(int speed, int dir[4])
 
 void pre_auton(void) {
 
+  wait(0.5, seconds);
+
   leftMotorA.setMaxTorque(100,percent);
   leftMotorB.setMaxTorque(100,percent);
   rightMotorA.setMaxTorque(100,percent);
@@ -220,7 +271,11 @@ void pre_auton(void) {
   cluster1.setVelocity(100,percent);
   cluster2.setVelocity(100,percent);
   cluster3.setVelocity(100,percent);
+
+ // GPS.calibrate();
   
+  //GPS.setLocation();
+
   //return void;
 }
 
@@ -237,8 +292,24 @@ void pre_auton(void) {
 void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
-  // ..........................................................................
-  
+//   // ..........................................................................
+//   if(GPS.isCalibrating() == false)
+//   {
+
+//   switch(autonVer)
+//   {
+//     case 0:
+//     //comp starting on left/alpha side
+
+//     break;
+    
+//     case 1:
+//     //comp starting on right/beta side
+    
+//     break;
+//   }
+// }
+
 }
 //meowffd
 /*---------------------------------------------------------------------------*/
@@ -253,6 +324,23 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+   ControllerMech.ButtonX.pressed(option1);
+  ControllerMech.ButtonA.pressed(option2);
+  ControllerMech.ButtonB.pressed(option3);
+  ControllerMech.ButtonY.pressed(option4);
+
+  ControllerMech.ButtonUp.pressed(option5);
+  ControllerMech.ButtonRight.pressed(option6);
+  ControllerMech.ButtonDown.pressed(option7);
+  ControllerMech.ButtonLeft.pressed(option8);
+
+  ControllerMech.ButtonR1.pressed(r1WasPressed);
+
+  ControllerMech.ButtonL1.pressed(L1WasPressed);
+  ControllerMech.ButtonL2.pressed(L2WasPressed);
+
+  ControllerMech.ButtonR2.pressed(R2WasPressed);
+
   while (1) {
     axis3Pos = ControllerDtrain.Axis3.position();
     axis1Pos = ControllerDtrain.Axis1.position();
@@ -312,17 +400,7 @@ void usercontrol(void) {
     
   }
 
-  ControllerMech.ButtonX.pressed(option1);
-  ControllerMech.ButtonA.pressed(option2);
-  ControllerMech.ButtonB.pressed(option3);
-  ControllerMech.ButtonY.pressed(option4);
-
-  ControllerMech.ButtonUp.pressed(option5);
-  ControllerMech.ButtonRight.pressed(option6);
-  ControllerMech.ButtonDown.pressed(option7);
-  ControllerMech.ButtonLeft.pressed(option8);
-
-  ControllerMech.ButtonR1.pressed(r1WasPressed);
+ 
 
   wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
