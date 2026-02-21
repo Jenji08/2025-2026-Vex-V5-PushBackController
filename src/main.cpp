@@ -36,9 +36,11 @@ brain Brain;
 
 
 // Robot configuration code.
-//gps GPS = gps(PORT19, offsetx, offsety, mm, 180);
-digital_out trapdoorSolenoid = digital_out(Brain.ThreeWirePort.H);
-digital_out secondTest = digital_out(Brain.ThreeWirePort.G);
+  gps GPS = gps(PORT19, offsetx, offsety, mm, 180);
+digital_out extendTrapdoor = digital_out(Brain.ThreeWirePort.G); 
+digital_out extendGate = digital_out(Brain.ThreeWirePort.H);
+digital_out retractGate = digital_out(Brain.ThreeWirePort.F)
+//only need to extend it as of 2/21/26
 motor leftMotorA = motor(PORT5, ratio18_1, false);
 motor leftMotorB = motor(PORT3, ratio18_1, false);
 motor rightMotorA = motor(PORT6, ratio18_1, true);
@@ -100,122 +102,53 @@ int axis4Pos;
 
 int autonVer = 0;
 
-bool solenoidBool = false;
-bool testBool = false;
-
-// void driveTo(double targetX, double targetY)
-// {
-//   double displacement;
-//   int variance = 20; //arbitrary value, code will stop once bot is within this many units 
-//   while(displacement > variance)
-//   {
-//     double dx = targetX - GPS.xPosition(mm);
-//     double dy = targetY - GPS.yPosition(mm);
-
-//     displacement = sqrt((dx*dx) + (dy*dy));
-
-    
-   
-    
-//   }
-// }
-void option1()
-{
-//X was pressed
-  cluster1.spin(forward);
-  cluster2.spin(forward);
-  cluster3.spin(forward);
-}
-
-void option2()
+void toHopper()
 {
   //A was pressed
+  //intake to hopper
+  //make cluster3 slightly less aggressive for this
   cluster1.spin(reverse);
   cluster2.spin(forward);
   cluster3.spin(forward);
 }
 
-void option3()
+void toHighG()
+{
+  //X was pressed
+  //hopper to highG and intake to highG
+  cluster1.spin(reverse);
+  cluster2.spin(forward);
+  cluster3.spin(reverse);
+}
+
+
+void toLowG()
 {
   //B was pressed
-  cluster1.spin(forward);
-  cluster2.spin(reverse);
-  cluster3.spin(forward);
-}
-
-void option4()
-{
-  //Y was pressed
-  cluster1.spin(forward);
-  cluster2.spin(forward);
-  cluster3.spin(reverse);
-}
-
-void option5()
-{
-  //Up was pressed
-  cluster1.spin(reverse);
-  cluster2.spin(forward);
-  cluster3.spin(reverse);
-}
-
-void option6()
-{
-  //right was pressed
-  cluster1.spin(forward);
-  cluster2.spin(reverse);
-  cluster3.spin(reverse);
-}
-
-void option7()
-{
-  //down was pressed
+  //hoper to lowG
   cluster1.spin(reverse);
   cluster2.spin(reverse);
   cluster3.spin(forward);
 }
 
-void option8()
+void stopCluster()
 {
-  //left was pressed
-  cluster1.spin(reverse);
-  cluster2.spin(reverse);
-  cluster3.spin(reverse);
-  printf("test");
-}
-
-void r1WasPressed()
-{
-  secondTest.set(true);
-
   cluster1.stop();
   cluster2.stop();
   cluster3.stop();
 }
 
-// void solenoidToggle()
-// {
-//     trapdoorSolenoid.set(!solenoidBool);
-//     solenoidBool = !solenoidBool;
-//     //simple toggle thing for solenoid on trapdoor.
-//     printf("toggle");
-  
-// }
 
-void L1WasPressed()
+void extendGateToggle()
 {
-trapdoorSolenoid.set(true);
+    retractGate.set(false);
+    extendGate.set(true);
 }
-void L2WasPressed()
-{
-  // secondTest.set(!testBool);
-  // testBool = !testBool;
 
-  trapdoorSolenoid.set(false);
-}
-void R2WasPressed()
+void retractGateToggle()
 {
-  secondTest.set(false);
+  extendGate.set(false);
+  retractGate.set(true);
 }
 
 void Drive(int speed, int dir[4])
@@ -272,9 +205,12 @@ void pre_auton(void) {
   cluster2.setVelocity(100,percent);
   cluster3.setVelocity(100,percent);
 
- // GPS.calibrate();
+  GPS.calibrate();
   
-  //GPS.setLocation();
+  GPS.setLocation();
+
+  extendGate.set(false);
+  retractGate.set(true);
 
   //return void;
 }
@@ -293,22 +229,22 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
 //   // ..........................................................................
-//   if(GPS.isCalibrating() == false)
-//   {
+  if(GPS.isCalibrating() == false)
+  {
 
-//   switch(autonVer)
-//   {
-//     case 0:
-//     //comp starting on left/alpha side
+  switch(autonVer)
+  {
+    case 0:
+    //comp starting on left/alpha side
 
-//     break;
+    break;
     
-//     case 1:
-//     //comp starting on right/beta side
+    case 1:
+    //comp starting on right/beta side
     
-//     break;
-//   }
-// }
+    break;
+  }
+}
 
 }
 //meowffd
@@ -324,22 +260,13 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
-   ControllerMech.ButtonX.pressed(option1);
-  ControllerMech.ButtonA.pressed(option2);
-  ControllerMech.ButtonB.pressed(option3);
-  ControllerMech.ButtonY.pressed(option4);
+  ControllerMech.ButtonA.pressed(toHopper);
+  ControllerMech.ButtonX.pressed(toHighG);
+  ControllerMech.ButtonB.pressed(toLowG);
+  ControllerMech.ButtonY.pressed(stopCluster);
 
-  ControllerMech.ButtonUp.pressed(option5);
-  ControllerMech.ButtonRight.pressed(option6);
-  ControllerMech.ButtonDown.pressed(option7);
-  ControllerMech.ButtonLeft.pressed(option8);
-
-  ControllerMech.ButtonR1.pressed(r1WasPressed);
-
-  ControllerMech.ButtonL1.pressed(L1WasPressed);
-  ControllerMech.ButtonL2.pressed(L2WasPressed);
-
-  ControllerMech.ButtonR2.pressed(R2WasPressed);
+  ControllerMech.ButtonR1.pressed(extendGateToggle);
+  ControllerMech.ButtonL1.pressed(retractGateToggle);
 
   while (1) {
     axis3Pos = ControllerDtrain.Axis3.position();
